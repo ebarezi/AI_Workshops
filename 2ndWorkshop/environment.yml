@@ -1,0 +1,19 @@
+name: 2ndWorkshop
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch>=2.1.0
+      - transformers>=4.40.0
+      - accelerate>=1.13.0
+      - sentence-transformers
+      - faiss-cpu
+      - langchain
+      - langchain-core
+      - langgraph
+      - langchain-mcp-adapters
+      - fastmcp
+      - python-dotenv

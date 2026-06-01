@@ -1,0 +1,21 @@
+name: workshop1
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - torch>=2.1.0
+      - transformers>=4.40.0
+      - datasets>=2.14.0
+      - accelerate>=1.13.0
+      - peft>=0.19.1
+      - bitsandbytes>=0.41.0
+      - safetensors>=0.3.0
+      - tokenizers
+      - matplotlib
+      - jupyterlab
+      - ipywidgets
+      - notebook
