@@ -3,7 +3,14 @@ old
 1stWorkshop/slides.md
 1stWorkshop/Workshop_outputs
 1stWorkshop/lora_alpaca_adapter
+1stWorkshop/trash
 
+
+2ndWorkshop/
 2ndWorkshop/outline.md
 2ndWorkshop/slides.md
 2ndWorkshop/__pycache__
+
+
+.gitignore
+git_push.sh

@@ -1,82 +1,72 @@
 # Workshop 1: LoRA Fine-Tuning
 
-This folder contains the materials for the first Purdue workshop on LoRA fine-tuning.
+Fine-tune a small language model using **LoRA** (Low-Rank Adaptation) on the Alpaca instruction dataset.  
+Only ~0.3% of parameters are trained while the base model stays frozen.
 
 ## Contents
 
-- `Workshop1_LoRA_Finetuning.ipynb` — interactive teaching notebook.
-- `train_lora.py` — runnable script version of the same workflow.
-- `outline.md` — workshop agenda and teaching plan.
-- `slides.md` — slide notes for the instructor.
-- `environment.yml` — Conda/Mamba environment specification.
-- `requirements.txt` — pip dependency list.
+- `Workshop1_LoRA_Finetuning.ipynb` — interactive teaching notebook
+- `environment.yml` — Conda/Mamba environment specification (recommended)
+- `requirements.txt` — pip dependency list
 
 ## Setup
 
-Create a fresh environment and install the workshop dependencies:
+### Option A: Conda (recommended)
+
+```bash
+conda env create -f environment.yml
+conda activate 1stWorkshop
+python -m ipykernel install --user --name 1stWorkshop --display-name "Python (1stWorkshop)"
+```
+
+### Option B: pip
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
 
-### (Optional) Create a Conda environment named `1stWorkshop`
-
-To create a reproducible Conda environment and keep the workshop sandboxed, run:
-
-```bash
-conda env create -n 1stWorkshop python=3.10 
-conda activate 1stWorkshop
-pip install -r requirements.txt
-```
-
-Or, if you have an `environment.yml` you prefer to use:
-
-```bash
-conda env create -f environment.yml -n 1stWorkshop
-conda activate 1stWorkshop
-```
-
 ## Running the notebook
 
-Launch Jupyter Lab or Notebook:
+Open `Workshop1_LoRA_Finetuning.ipynb` in VS Code or Jupyter and select the `Python (1stWorkshop)` kernel.
+
+Or launch from the terminal:
 
 ```bash
-cd "$(dirname \"$(realpath 1stWorkshop/README.md)\")"
-jupyter lab 1stWorkshop/Workshop1_LoRA_Finetuning.ipynb
+jupyter lab Workshop1_LoRA_Finetuning.ipynb
 ```
 
-or:
+## What the notebook does
 
-```bash
-jupyter notebook 1stWorkshop/Workshop1_LoRA_Finetuning.ipynb
-```
+| Section | Description |
+|---|---|
+| 1–2 | Imports and model selection |
+| 3 | Prompt formatting using Qwen's native **ChatML** format (`build_messages` + `apply_chat_template`) |
+| 4 | Load and split `yahma/alpaca-cleaned` (600 samples, 80/10/10) or your own local JSON/CSV |
+| 5 | Tokenize — loss computed on the full sequence (prompt + response) |
+| 5b | **Alternative:** response-only tokenization — prompt tokens masked to `-100` so loss is computed on the assistant turn only |
+| 6 | Load base model with 4-bit quantization (QLoRA); gradient checkpointing enabled with `use_reentrant=False` |
+| 7 | Attach LoRA adapter (`r=8`, `lora_alpha=32`, attention projections) |
+| 8 | `MultiEvalTrainer` — evaluates both validation and test sets at every checkpoint |
+| 9 | Training arguments + early stopping (patience=3) |
+| 10 | Train |
+| 11 | Plot train / validation / test loss curves |
+| 12 | Save the LoRA adapter (~5 MB) |
+| 13 | Reload adapter and run inference using the ChatML template |
+| 14 | Extension ideas |
 
-## Running the script
+### Tokenization: Section 5 vs 5b
 
-```bash
-python 1stWorkshop/train_lora.py
-```
-
-## What the script does
-
-`train_lora.py` runs the full fine-tuning workflow optimized for workshop speed:
-
-- **Model:** `Qwen/Qwen2.5-0.5B-Instruct` — completes in minutes on a laptop, seconds on an A10. Change `model_name` at the top of the script to swap models.
-- **Dataset:** 600 samples from `yahma/alpaca-cleaned`, or point it at a local JSON/CSV file (see the commented-out Option B block in the script).
-- **Training:** 1 epoch, `max_length=512`, early stopping with patience=3 on validation loss.
-- **Evaluation:** Validation and test loss are both evaluated every 5 steps, producing full loss curves.
-- **Output:** Loss plot (train / validation / test) saved to `workshop_outputs/lora-alpaca/loss_curves.png`. Adapter saved to `lora_alpaca_adapter/`.
+By default **Section 5** runs (no masking — loss on the full sequence).  
+To train with response-only loss, run **Section 5b instead** — it sets prompt token labels to `-100` so the model only learns to predict the assistant response.
 
 ## Notes
 
-- `environment.yml` is recommended for the most reproducible setup.
-- `requirements.txt` is useful when using a plain `pip` virtual environment.
-- If you run into package conflicts, create a fresh environment and install from one of the files only.
-- `matplotlib` is required for the loss plot — it is included in `requirements.txt`.
+- Change `model_name` in Section 2 to swap models without touching anything else.
+- On CPU the notebook is slow but functional; the default `Qwen/Qwen2.5-0.5B-Instruct` is small enough to complete.
+- For GPU training, an A10-class GPU or better is recommended for the 4-bit QLoRA path.
 
 ## Troubleshooting
 
-- If `torch` or `bitsandbytes` fails to install, ensure your Python version is 3.10–3.12 and that you have CUDA-compatible drivers installed.
-- If the notebook fails due to missing packages, verify the active environment and install the required dependencies again.
-- For GPU training, use a machine with at least one A10-class GPU and sufficient VRAM to load a 4-bit quantized model.
-- On CPU-only machines the run is slow but functional — the default `Qwen2.5-0.5B-Instruct` model is small enough to complete in a reasonable time.
+- If `bitsandbytes` fails, confirm you have CUDA-compatible drivers and Python 3.10–3.12.
+- If the notebook fails due to missing packages, verify the active kernel matches the environment where you installed dependencies.
+- If you see a gradient checkpointing warning, ensure you are using PEFT ≥ 0.7 and Transformers ≥ 4.36 (both pinned in `environment.yml`).

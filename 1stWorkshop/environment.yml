@@ -1,13 +1,15 @@
-name: workshop1
+name: 1stWorkshop
 channels:
-  - defaults
-  - conda-forge
   - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
 dependencies:
   - python=3.12
+  - pytorch
+  - pytorch-cuda=11.8      # matches Anvil's CUDA; avoids pip NCCL conflicts
   - pip
   - pip:
-      - torch>=2.1.0
       - transformers>=4.40.0
       - datasets>=2.14.0
       - accelerate>=1.13.0
@@ -19,3 +21,4 @@ dependencies:
       - jupyterlab
       - ipywidgets
       - notebook
+      - ipykernel
