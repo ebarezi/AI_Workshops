@@ -5,8 +5,8 @@ old
 1stWorkshop/lora_alpaca_adapter
 1stWorkshop/trash
 1stWorkshop/sample_format.csv
-lora_alpaca_adapter/
-lora_bert_adapter/
+1stWorkshoplora_alpaca_adapter/
+1stWorkshop/lora_bert_adapter/
 
 2ndWorkshop/
 2ndWorkshop/outline.md
