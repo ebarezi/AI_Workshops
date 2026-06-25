@@ -9,25 +9,33 @@ Only ~0.2% of parameters are trained while the base model stays frozen.
 
 ## Setup
 
-### Option A: Conda (recommended)
+### Local machine (conda)
 
 ```bash
-conda create -n 1stWorkshop python=3.12 -y
-conda activate 1stWorkshop
-python -m ipykernel install --user --name 1stWorkshop --display-name "Python (1stWorkshop)"
+conda create -n workshop1 python=3.12 -y
+conda activate workshop1
+pip install ipykernel
+python -m ipykernel install --user --name workshop1 --display-name "Python (workshop1)"
 ```
 
-Then open the notebook and run **Section 0** to install the actual packages (`torch`, `matplotlib`, `transformers`, `huggingface_hub`, `peft`, `accelerate`, `datasets`, `bitsandbytes`).
+Open the notebook, select the `Python (workshop1)` kernel, then run Section 0's `%pip install` cell once and restart the kernel.
 
-### Option B: pip (any existing Python 3.10–3.12 environment)
+### Purdue Gilbreth cluster
+
+Before launching this notebook, create and select a conda environment kernel (Workshop1) from a terminal on the cluster:
 
 ```bash
-pip install torch torchvision torchaudio matplotlib transformers huggingface_hub peft accelerate datasets bitsandbytes
+module load conda
+conda-env-mod create -n ENV_NAME_HERE -j
+module use $HOME/privatemodules
+module load conda-env/ENV_NAME_HERE-py3.12.11
 ```
+
+Replace `ENV_NAME_HERE` with your environment name (Workshop1), then select the matching kernel in Jupyter before running the cells below.
 
 ## Running the notebook
 
-Open `Workshop1_LoRA_Finetuning.ipynb` in VS Code or Jupyter and select the `Python (1stWorkshop)` kernel.
+Open `Workshop1_LoRA_Finetuning.ipynb` in VS Code or Jupyter and select the `Python (workshop1)` kernel.
 
 Or launch from the terminal:
 
