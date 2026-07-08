@@ -1,0 +1,29 @@
+{
+  "events": [
+    {
+      "date": "2026-10-10",
+      "title": "Fall Break",
+      "notes": "No classes."
+    },
+    {
+      "date": "2026-10-22",
+      "title": "CS 182 Midterm 1",
+      "notes": "Exam covers lectures 1-8."
+    },
+    {
+      "date": "2026-11-02",
+      "title": "Last Day to Drop",
+      "notes": "Drop deadline without grade penalty."
+    },
+    {
+      "date": "2026-11-19",
+      "title": "CS 182 Midterm 2",
+      "notes": "Exam covers lectures 9-16."
+    },
+    {
+      "date": "2026-12-05",
+      "title": "Final Project Presentations",
+      "notes": "In-class presentations for all teams."
+    }
+  ]
+}
